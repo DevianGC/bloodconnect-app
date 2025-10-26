@@ -1,0 +1,139 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+export default function Navbar({ role = 'public' }) {
+  const pathname = usePathname();
+  const isActive = (path) => pathname === path;
+
+  const navLinkClass = (isActive) => 
+    `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+      isActive 
+        ? 'bg-red-600 text-white shadow-md' 
+        : 'text-gray-700 hover:bg-gray-100 hover:text-red-600'
+    }`;
+
+  return (
+    <nav className="bg-white shadow-md border-b border-gray-100 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-20">
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="bg-gradient-to-br from-red-600 to-red-700 p-2 rounded-xl group-hover:scale-105 transition-transform duration-200 shadow-md">
+                <svg 
+                  className="h-7 w-7 text-white" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </div>
+              <div>
+                <span className="text-xl font-extrabold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">BloodConnect</span>
+                <span className="block text-xs text-gray-500 font-medium">Olongapo</span>
+              </div>
+            </Link>
+          </div>
+
+          <div className="hidden md:ml-6 md:flex md:items-center space-x-2">
+          {role === 'admin' && (
+            <>
+              <Link 
+                href="/admin/dashboard" 
+                className={navLinkClass(isActive('/admin/dashboard'))}
+              >
+                Dashboard
+              </Link>
+              <Link 
+                href="/admin/requests" 
+                className={navLinkClass(isActive('/admin/requests'))}
+              >
+                Requests
+              </Link>
+              <Link 
+                href="/admin/donors" 
+                className={navLinkClass(isActive('/admin/donors'))}
+              >
+                Donors
+              </Link>
+              <Link 
+                href="/admin/analytics" 
+                className={navLinkClass(isActive('/admin/analytics'))}
+              >
+                Analytics
+              </Link>
+              <Link 
+                href="/admin/settings" 
+                className={navLinkClass(isActive('/admin/settings'))}
+              >
+                Settings
+              </Link>
+            </>
+          )}
+
+          {role === 'donor' && (
+            <>
+              <Link 
+                href="/donor/profile" 
+                className={navLinkClass(isActive('/donor/profile'))}
+              >
+                Profile
+              </Link>
+              <Link 
+                href="/donor/alerts" 
+                className={navLinkClass(isActive('/donor/alerts'))}
+              >
+                Alerts
+              </Link>
+              <Link 
+                href="/donor/update" 
+                className={navLinkClass(isActive('/donor/update'))}
+              >
+                Update Info
+              </Link>
+            </>
+          )}
+
+          {role === 'public' && (
+            <>
+              <Link 
+                href="/donor/register" 
+                className={navLinkClass(false)}
+              >
+                Become a Donor
+              </Link>
+              <Link 
+                href="/donor/login" 
+                className={navLinkClass(false)}
+              >
+                Donor Login
+              </Link>
+              <Link 
+                href="/admin/login" 
+                className={navLinkClass(false)}
+              >
+                Admin Login
+              </Link>
+            </>
+          )}
+
+          {(role === 'admin' || role === 'donor') && (
+              <button 
+                onClick={() => {
+                  alert('Logout functionality will be connected to backend');
+                  window.location.href = '/';
+                }}
+                className="ml-4 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
