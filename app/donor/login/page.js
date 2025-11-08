@@ -3,17 +3,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { donorLogin } from '../../../lib/api';
+import useAuthRequest from '../../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
 
 export default function DonorLogin() {
   const router = useRouter();
+  const { login, isLoading, error: authError } = useAuthRequest();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,22 +23,19 @@ export default function DonorLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
 
     try {
-      const result = await donorLogin(formData.email, formData.password);
+      const result = await login(formData);
       
-      if (result.success) {
-        localStorage.setItem('donorUser', JSON.stringify(result.data));
+      if (result) {
+        localStorage.setItem('donorUser', JSON.stringify(result));
         router.push('/donor/profile');
       } else {
-        setError(result.error || 'Login failed');
+        setError('Login failed');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -57,9 +54,9 @@ export default function DonorLogin() {
         </div>
 
         <form className={styles.authForm} onSubmit={handleSubmit}>
-          {error && (
+          {(error || authError) && (
             <div className={styles.authError}>
-              {error}
+              {error || authError}
             </div>
           )}
 
@@ -104,9 +101,9 @@ export default function DonorLogin() {
           <button 
             type="submit" 
             className={styles.btnPrimary}
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 

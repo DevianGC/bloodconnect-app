@@ -34,19 +34,31 @@
 @layer base {
   :root {
     /* Color Palette - Professional & Minimalist */
-    --primary: 230 57 70;       /* #e63946 */
-    --primary-dark: 214 40 40;  /* #d62828 */
-    --primary-light: 254 242 242; /* #fef2f2 */
-    --secondary: 69 123 157;    /* #457b9d */
-    --secondary-dark: 29 53 87;  /* #1d3557 */
-    --accent: 42 157 143;  /* #2a9d8f */
+    --primary: 239 68 68; /* #ef4444 */
+    --primary-dark: 220 38 38; /* #dc2626 */
+    --primary-light: 248 113 113; /* #f87171 */
+    --secondary: 249 115 22; /* #f97316 */
+    --accent: 42 157 143; /* #2a9d8f */
     --accent-yellow: 244 162 97; /* #f4a261 */
     --white: 255 255 255;
     --black: 0 0 0;
     --gray-100: 243 244 246;
     --gray-200: 229 231 235;
     --gray-300: 209 213 219;
-    
+    --gray-400: 156 163 175;
+    --gray-500: 107 114 128;
+    --gray-600: 75 85 99;
+    --gray-700: 55 65 81;
+    --gray-800: 31 41 55;
+    --gray-900: 17 24 39;
+    --red-100: 254 226 226;
+    --red-200: 254 202 202;
+    --red-600: 220 38 38;
+    --red-700: 185 28 28;
+    --yellow-100: 254 243 199;
+    --yellow-200: 253 224 71;
+    --yellow-700: 146 64 14;
+
     /* Typography */
     --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --font-mono: 'Courier New', Courier, monospace;
@@ -310,3 +322,4 @@ select {
 .donor-login-btn:hover {
   color: #dc2626 !important; /* red-600 */
 }
+

@@ -7,6 +7,28 @@ export default function Navbar({ role = 'public' }) {
   const pathname = usePathname();
   const isActive = (path) => pathname === path;
 
+  const navLinks = {
+    admin: [
+      { href: '/admin/dashboard', label: 'Dashboard' },
+      { href: '/admin/requests', label: 'Requests' },
+      { href: '/admin/donors', label: 'Donors' },
+      { href: '/admin/analytics', label: 'Analytics' },
+      { href: '/admin/settings', label: 'Settings' },
+    ],
+    donor: [
+      { href: '/donor/profile', label: 'Profile' },
+      { href: '/donor/alerts', label: 'Alerts' },
+      { href: '/donor/update', label: 'Update Info' },
+    ],
+    public: [
+      { href: '/donor/register', label: 'Become a Donor' },
+      { href: '/donor/login', label: 'Donor Login' },
+      { href: '/admin/login', label: 'Admin Login' },
+    ],
+  };
+
+  const currentLinks = navLinks[role] || [];
+
   const navLinkClass = (isActive) => 
     `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
       isActive 
@@ -39,88 +61,17 @@ export default function Navbar({ role = 'public' }) {
           </div>
 
           <div className="hidden md:ml-6 md:flex md:items-center space-x-2">
-          {role === 'admin' && (
-            <>
+            {currentLinks.map(({ href, label }) => (
               <Link 
-                href="/admin/dashboard" 
-                className={navLinkClass(isActive('/admin/dashboard'))}
+                key={href}
+                href={href} 
+                className={navLinkClass(isActive(href))}
               >
-                Dashboard
+                {label}
               </Link>
-              <Link 
-                href="/admin/requests" 
-                className={navLinkClass(isActive('/admin/requests'))}
-              >
-                Requests
-              </Link>
-              <Link 
-                href="/admin/donors" 
-                className={navLinkClass(isActive('/admin/donors'))}
-              >
-                Donors
-              </Link>
-              <Link 
-                href="/admin/analytics" 
-                className={navLinkClass(isActive('/admin/analytics'))}
-              >
-                Analytics
-              </Link>
-              <Link 
-                href="/admin/settings" 
-                className={navLinkClass(isActive('/admin/settings'))}
-              >
-                Settings
-              </Link>
-            </>
-          )}
+            ))}
 
-          {role === 'donor' && (
-            <>
-              <Link 
-                href="/donor/profile" 
-                className={navLinkClass(isActive('/donor/profile'))}
-              >
-                Profile
-              </Link>
-              <Link 
-                href="/donor/alerts" 
-                className={navLinkClass(isActive('/donor/alerts'))}
-              >
-                Alerts
-              </Link>
-              <Link 
-                href="/donor/update" 
-                className={navLinkClass(isActive('/donor/update'))}
-              >
-                Update Info
-              </Link>
-            </>
-          )}
-
-          {role === 'public' && (
-            <>
-              <Link 
-                href="/donor/register" 
-                className={navLinkClass(false)}
-              >
-                Become a Donor
-              </Link>
-              <Link 
-                href="/donor/login" 
-                className={navLinkClass(false)}
-              >
-                Donor Login
-              </Link>
-              <Link 
-                href="/admin/login" 
-                className={navLinkClass(false)}
-              >
-                Admin Login
-              </Link>
-            </>
-          )}
-
-          {(role === 'admin' || role === 'donor') && (
+            {(role === 'admin' || role === 'donor') && (
               <button 
                 onClick={() => {
                   alert('Logout functionality will be connected to backend');
