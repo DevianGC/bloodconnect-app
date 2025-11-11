@@ -1,4 +1,5 @@
 import "./globals.css";
+import ToastProvider from "./providers/ToastProvider";
 
 export const metadata = {
   title: "BloodConnect Olongapo",
@@ -9,8 +10,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );
 }
+

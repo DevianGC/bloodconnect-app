@@ -3,17 +3,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { adminLogin } from '../../../lib/api';
+import useAuthRequest from '../../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
 
 export default function AdminLogin() {
   const router = useRouter();
+  const { login, isLoading, error: authError } = useAuthRequest();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,23 +23,20 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
 
     try {
-      const result = await adminLogin(formData.email, formData.password);
+      const result = await login(formData);
       
-      if (result.success) {
+      if (result) {
         // In production, store auth token in localStorage/cookies
-        localStorage.setItem('adminUser', JSON.stringify(result.data));
+        localStorage.setItem('adminUser', JSON.stringify(result));
         router.push('/admin/dashboard');
       } else {
-        setError(result.error || 'Login failed');
+        setError('Login failed');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -58,9 +55,9 @@ export default function AdminLogin() {
         </div>
 
         <form className={styles.authForm} onSubmit={handleSubmit}>
-          {error && (
+          {(error || authError) && (
             <div className={styles.authError}>
-              {error}
+              {error || authError}
             </div>
           )}
 
@@ -105,9 +102,9 @@ export default function AdminLogin() {
           <button 
             type="submit" 
             className={styles.btnPrimary}
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
