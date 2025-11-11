@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import useAuthRequest from '../../../hooks/useAuthRequest';
+import useAuthRequest from '../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
 
 export default function DonorLogin() {

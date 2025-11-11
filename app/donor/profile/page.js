@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Navbar from '../../../components/Navbar';
-import Footer from '../../../components/Footer';
-import { checkDonationEligibility, formatDate } from '../../../lib/api';
-import styles from '../../../styles/donor.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { checkDonationEligibility, formatDate } from '@/lib/api';
+import styles from '@/styles/donor.module.css';
 
 export default function DonorProfile() {
   const router = useRouter();

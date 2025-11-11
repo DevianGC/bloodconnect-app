@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Sidebar from '../../../components/Sidebar';
-import RequestForm from '../../../components/RequestForm';
-import DonorCard from '../../../components/DonorCard';
-import Modal from '../../../components/Modal';
-import { createRequest, getDonors, sendBulkAlert } from '../../../lib/api';
-import styles from '../../../styles/admin.module.css';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import RequestForm from '@/components/RequestForm';
+import DonorCard from '@/components/DonorCard';
+import Modal from '@/components/Modal';
+import { createRequest, getDonors, sendBulkAlert } from '@/lib/api';
+import styles from '@/styles/admin.module.css';
 
 export default function AdminRequests() {
   const router = useRouter();

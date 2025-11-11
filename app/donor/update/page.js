@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Footer from '../../../components/Footer';
-import { updateDonor } from '../../../lib/api';
-import { barangays } from '../../../lib/mockData';
-import styles from '../../../styles/donor.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { updateDonor } from '@/lib/api';
+import { barangays } from '@/lib/mockData';
+import styles from '@/styles/donor.module.css';
 
 export default function DonorUpdate() {
   const router = useRouter();

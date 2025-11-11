@@ -1,4 +1,4 @@
-import { checkDonationEligibility, formatDate } from '../../lib/api';
+import { checkDonationEligibility, formatDate } from '@/lib/api';
 
 export default function DonorCard({ donor, onEdit, onDeactivate, showActions = true }) {
   const eligibility = checkDonationEligibility(donor.lastDonation);

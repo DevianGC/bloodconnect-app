@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import useAuthRequest from '../../../hooks/useAuthRequest';
-import styles from '../../../styles/auth.module.css';
+import useAuthRequest from '@/app/hooks/useAuthRequest';
+import styles from '@/styles/auth.module.css';
 
 export default function AdminLogin() {
   const router = useRouter();

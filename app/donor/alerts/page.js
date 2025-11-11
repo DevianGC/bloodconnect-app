@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Footer from '../../../components/Footer';
-import { getAlerts, formatDateTime } from '../../../lib/api';
-import styles from '../../../styles/donor.module.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { getAlerts, formatDateTime } from '@/lib/api';
+import styles from '@/styles/donor.module.css';
 
 export default function DonorAlerts() {
   const router = useRouter();

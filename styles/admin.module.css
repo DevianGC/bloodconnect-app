@@ -1,0 +1,14 @@
+/* Placeholder for admin styles */
+.adminLayout { display: flex; }
+.adminMain { flex-grow: 1; padding: 2rem; }
+.adminHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.adminSubtitle { font-size: 1.2rem; color: #666; }
+.btnPrimary { background-color: #d9534f; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; }
+.btnPrimary:hover { background-color: #c9302c; }
+.filtersSection { margin-bottom: 2rem; }
+.filtersGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.filterGroup { display: flex; flex-direction: column; }
+.filterInput { padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px; }
+.loading { text-align: center; padding: 4rem; }
+.spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

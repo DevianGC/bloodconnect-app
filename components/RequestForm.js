@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { bloodTypes, hospitals } from '../../lib/mockData';
+import { bloodTypes, hospitals } from '@/lib/mockData';
 
 export default function RequestForm({ onSubmit, initialData = null }) {
   const [formData, setFormData] = useState(initialData || {
