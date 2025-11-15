@@ -1,0 +1,12 @@
+.adminLayout {
+  display: flex;
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding: 2rem;
+}
+
+.pageHeader {
+  margin-bottom: 1.5rem;
+}

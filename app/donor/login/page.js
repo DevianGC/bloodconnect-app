@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import useAuthRequest from '../../../hooks/useAuthRequest';
+import useAuthRequest from '../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
 
 export default function DonorLogin() {
@@ -30,7 +30,7 @@ export default function DonorLogin() {
       
       if (result) {
         localStorage.setItem('donorUser', JSON.stringify(result));
-        router.push('/donor/profile');
+        router.push('/donor/dashboard');
       } else {
         setError('Login failed');
       }

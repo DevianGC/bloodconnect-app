@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Footer from '../../../components/Footer';
-import { getAlerts, formatDateTime } from '../../../lib/api';
-import styles from '../../../styles/donor.module.css';
+import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { getAlerts, formatDateTime } from '@/lib/api';
+import styles from '@/styles/donor.module.css';
 
 export default function DonorAlerts() {
   const router = useRouter();
@@ -50,31 +51,30 @@ export default function DonorAlerts() {
   return (
     <>
       <Navbar role="donor" />
-      <main className={styles.donorMain}>
+      <main className={styles.alertsMain}>
         <div className="container">
-          <div className={styles.pageHeader}>
+          {/* Page Header */}
+          <div className={styles.alertsHeader}>
             <h1>Blood Donation Alerts</h1>
-            <p className={styles.pageSubtitle}>
-              Emergency blood requests matching your blood type ({donor?.bloodType})
-            </p>
+            <p>Emergency requests for {donor?.bloodType} blood</p>
           </div>
 
           {/* Alert Status */}
-          <div className={styles.section}>
-            <div className={styles.alertStatusCard}>
-              <div className={styles.alertStatusIcon}>
+          <div className={styles.alertStatusSection}>
+            <div className={`${styles.statusCard} ${donor?.emailAlerts ? styles.enabled : styles.disabled}`}>
+              <div className={styles.statusIcon}>
                 {donor?.emailAlerts ? '🔔' : '🔕'}
               </div>
-              <div className={styles.alertStatusContent}>
-                <h3>Alert Status: {donor?.emailAlerts ? 'Enabled' : 'Disabled'}</h3>
+              <div className={styles.statusContent}>
+                <h3>Alerts {donor?.emailAlerts ? 'Enabled' : 'Disabled'}</h3>
                 <p>
                   {donor?.emailAlerts 
-                    ? 'You will receive email notifications for emergency blood requests matching your blood type.'
-                    : 'Email alerts are currently disabled. Enable them in your profile settings to receive notifications.'}
+                    ? 'You receive notifications for emergency requests'
+                    : 'Enable alerts in your profile to receive notifications'}
                 </p>
                 {!donor?.emailAlerts && (
                   <button 
-                    className={styles.btnPrimary}
+                    className={styles.editButton}
                     onClick={() => router.push('/donor/update')}
                   >
                     Enable Alerts
@@ -85,33 +85,28 @@ export default function DonorAlerts() {
           </div>
 
           {/* Alerts List */}
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>
-              Recent Alerts ({alerts.length})
-            </h2>
+          <div className={styles.alertsListSection}>
+            <h2>Recent Alerts ({alerts.length})</h2>
 
             {alerts.length === 0 ? (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon}>📭</div>
                 <h3>No Alerts Yet</h3>
-                <p>
-                  You haven't received any blood donation alerts. When there's an emergency
-                  request for {donor?.bloodType} blood, you'll see it here.
-                </p>
+                <p>You'll see emergency requests for {donor?.bloodType} blood here</p>
               </div>
             ) : (
-              <div className={styles.alertsList}>
+              <div className={styles.alertsGrid}>
                 {alerts.map(alert => (
                   <div 
                     key={alert.id} 
-                    className={`${styles.alertCard} ${alert.status === 'fulfilled' ? styles.alertFulfilled : ''}`}
+                    className={`${styles.alertCard} ${alert.status === 'fulfilled' ? styles.fulfilled : ''}`}
                   >
                     <div className={styles.alertHeader}>
                       <div className={styles.alertTitle}>
                         <span className={styles.alertIcon}>🩸</span>
                         <h3>{alert.title}</h3>
                       </div>
-                      <span className={`${styles.alertStatus} ${styles[`status${alert.status}`]}`}>
+                      <span className={`${styles.alertStatus} ${alert.status === 'sent' ? styles.active : styles.completed}`}>
                         {alert.status === 'sent' ? 'Active' : 'Fulfilled'}
                       </span>
                     </div>
@@ -121,20 +116,20 @@ export default function DonorAlerts() {
                       
                       <div className={styles.alertDetails}>
                         <div className={styles.alertDetail}>
-                          <span className={styles.alertDetailLabel}>Hospital:</span>
-                          <span className={styles.alertDetailValue}>{alert.hospitalName}</span>
+                          <span className={styles.label}>Hospital</span>
+                          <span className={styles.value}>{alert.hospitalName}</span>
                         </div>
                         <div className={styles.alertDetail}>
-                          <span className={styles.alertDetailLabel}>Blood Type:</span>
-                          <span className={styles.bloodTypeBadge}>{alert.bloodType}</span>
+                          <span className={styles.label}>Blood Type</span>
+                          <span className={styles.value}>{alert.bloodType}</span>
                         </div>
                         <div className={styles.alertDetail}>
-                          <span className={styles.alertDetailLabel}>Quantity Needed:</span>
-                          <span className={styles.alertDetailValue}>{alert.quantity} units</span>
+                          <span className={styles.label}>Quantity</span>
+                          <span className={styles.value}>{alert.quantity} units</span>
                         </div>
                         <div className={styles.alertDetail}>
-                          <span className={styles.alertDetailLabel}>Sent:</span>
-                          <span className={styles.alertDetailValue}>{formatDateTime(alert.sentAt)}</span>
+                          <span className={styles.label}>Sent</span>
+                          <span className={styles.value}>{formatDateTime(alert.sentAt)}</span>
                         </div>
                       </div>
                     </div>
@@ -142,16 +137,18 @@ export default function DonorAlerts() {
                     {alert.status === 'sent' && (
                       <div className={styles.alertActions}>
                         <button 
-                          className={styles.btnPrimary}
+                          className={styles.actionButton}
                           onClick={() => alert('Contact functionality will be connected to backend')}
                         >
-                          📞 Contact Hospital
+                          <span className={styles.actionIcon}>📞</span>
+                          Contact Hospital
                         </button>
                         <button 
-                          className={styles.btnSecondary}
+                          className={styles.actionButton}
                           onClick={() => alert('Response functionality will be connected to backend')}
                         >
-                          ✅ Mark as Responded
+                          <span className={styles.actionIcon}>✓</span>
+                          Mark as Responded
                         </button>
                       </div>
                     )}
@@ -161,49 +158,29 @@ export default function DonorAlerts() {
             )}
           </div>
 
-          {/* Instructions */}
-          <div className={styles.section}>
-            <div className={styles.instructionsCard}>
-              <h3>📋 What to Do When You Receive an Alert</h3>
-              <ol className={styles.instructionsList}>
-                <li>
-                  <strong>Check Your Eligibility:</strong> Ensure you haven't donated blood in the last 8 weeks
-                  and are in good health.
-                </li>
-                <li>
-                  <strong>Respond Quickly:</strong> Emergency blood requests are time-sensitive. Contact the
-                  hospital as soon as possible if you can donate.
-                </li>
-                <li>
-                  <strong>Prepare for Donation:</strong> Bring a valid ID, eat a good meal, and stay hydrated
-                  before going to the hospital.
-                </li>
-                <li>
-                  <strong>Update Your Profile:</strong> After donating, update your last donation date in your
-                  profile to track your eligibility.
-                </li>
-                <li>
-                  <strong>Can't Donate?:</strong> That's okay! Your participation is voluntary. You'll receive
-                  future alerts when you're eligible again.
-                </li>
-              </ol>
-            </div>
-          </div>
-
-          {/* Emergency Contact */}
-          <div className={styles.section}>
-            <div className={styles.emergencyCard}>
-              <div className={styles.emergencyIcon}>🚨</div>
-              <div className={styles.emergencyContent}>
-                <h3>Emergency Hotline</h3>
-                <p className={styles.emergencyNumber}>911</p>
-                <p>For urgent blood donation inquiries, contact the City Health Office</p>
-              </div>
+          {/* Quick Actions */}
+          <div className={styles.actionsSection}>
+            <h2>Quick Actions</h2>
+            <div className={styles.actionsGrid}>
+              <Link href="/donor/profile" className={styles.actionButton}>
+                <span className={styles.actionIcon}>👤</span>
+                View Profile
+              </Link>
+              <Link href="/donor/update" className={styles.actionButton}>
+                <span className={styles.actionIcon}>✏️</span>
+                Update Settings
+              </Link>
+              <button 
+                className={styles.actionButton}
+                onClick={() => alert('Contact functionality will be implemented')}
+              >
+                <span className={styles.actionIcon}>📞</span>
+                Contact Support
+              </button>
             </div>
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

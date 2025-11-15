@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Sidebar from '../../../components/Sidebar';
-import { logout } from '../../../lib/api';
-import styles from '../../../styles/admin.module.css';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import { logout } from '@/lib/api';
+import styles from '@/styles/admin.module.css';
 
 export default function AdminSettings() {
   const router = useRouter();

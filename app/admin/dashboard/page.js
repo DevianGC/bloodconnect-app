@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import Sidebar from '../../../components/Sidebar';
+import StatCard from '../../../components/atomic/molecules/StatCard';
 import { getAnalytics, getRequests } from '../../../lib/api';
 import styles from '../../../styles/admin.module.css';
 
@@ -65,41 +66,11 @@ export default function AdminDashboard() {
             <p className={styles.adminSubtitle}>Welcome back! Here's your overview.</p>
           </div>
 
-          {/* Summary Cards */}
           <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>👥</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.totalDonors || 0}</div>
-                <div className={styles.statLabel}>Total Donors</div>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>🩸</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.activeRequests || 0}</div>
-                <div className={styles.statLabel}>Active Requests</div>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>📋</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.totalRequests || 0}</div>
-                <div className={styles.statLabel}>Total Requests</div>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>✅</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>
-                  {analytics?.totalRequests - analytics?.activeRequests || 0}
-                </div>
-                <div className={styles.statLabel}>Fulfilled</div>
-              </div>
-            </div>
+            <StatCard icon="👥" value={analytics?.totalDonors || 0} label="Total Donors" />
+            <StatCard icon="🩸" value={analytics?.activeRequests || 0} label="Active Requests" />
+            <StatCard icon="📋" value={analytics?.totalRequests || 0} label="Total Requests" />
+            <StatCard icon="✅" value={(analytics?.totalRequests || 0) - (analytics?.activeRequests || 0)} label="Fulfilled" />
           </div>
 
           {/* Quick Actions */}
