@@ -1,10 +1,18 @@
 import { checkDonationEligibility, formatDate } from '@/lib/api';
+import type { Donor } from '@/types/api';
 
-export default function DonorCard({ donor, onEdit, onDeactivate, showActions = true }) {
+type Props = {
+  donor: Donor;
+  onEdit: (donor: Donor) => void;
+  onDeactivate: (id: number) => void;
+  showActions?: boolean;
+};
+
+export default function DonorCard({ donor, onEdit, onDeactivate, showActions = true }: Props) {
   const eligibility = checkDonationEligibility(donor.lastDonation);
   
   // Dynamic blood type badge color
-  const getBloodTypeColor = (bloodType) => {
+  const getBloodTypeColor = (bloodType: string) => {
     const baseType = bloodType.replace(/[+-]/g, '');
     const colors = {
       'A': 'bg-red-600',

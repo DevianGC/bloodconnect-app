@@ -5,7 +5,10 @@ import { usePathname } from 'next/navigation';
 
 export default function Navbar({ role = 'public' }) {
   const pathname = usePathname();
-  const isActive = (path) => pathname === path;
+  const isActive = (path) => {
+    if (path === '/') return pathname === '/';
+    return pathname.startsWith(path);
+  };
 
   const navLinks = {
     admin: [
@@ -16,6 +19,7 @@ export default function Navbar({ role = 'public' }) {
       { href: '/admin/settings', label: 'Settings' },
     ],
     donor: [
+      { href: '/donor/dashboard', label: 'Dashboard' },
       { href: '/donor/profile', label: 'Profile' },
       { href: '/donor/alerts', label: 'Alerts' },
       { href: '/donor/update', label: 'Update Info' },
@@ -30,37 +34,37 @@ export default function Navbar({ role = 'public' }) {
   const currentLinks = navLinks[role] || [];
 
   const navLinkClass = (isActive) => 
-    `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+    `px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
       isActive 
-        ? 'bg-red-600 text-white shadow-md' 
-        : 'text-gray-700 hover:bg-gray-100 hover:text-red-600'
+        ? 'text-gray-900 border-b-2 border-gray-900 bg-gray-50' 
+        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
     }`;
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
+        <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="bg-gradient-to-br from-red-600 to-red-700 p-2 rounded-xl group-hover:scale-105 transition-transform duration-200 shadow-md">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="bg-gray-900 p-2 rounded-lg">
                 <svg 
-                  className="h-7 w-7 text-white" 
+                  className="h-6 w-6 text-white" 
                   viewBox="0 0 24 24" 
                   fill="none" 
                   stroke="currentColor" 
-                  strokeWidth="2.5"
+                  strokeWidth="2"
                 >
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
               </div>
               <div>
-                <span className="text-xl font-extrabold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">BloodConnect</span>
-                <span className="block text-xs text-gray-500 font-medium">Olongapo</span>
+                <span className="text-lg font-bold text-gray-900">BloodConnect</span>
+                <span className="block text-xs text-gray-500">Olongapo</span>
               </div>
             </Link>
           </div>
 
-          <div className="hidden md:ml-6 md:flex md:items-center space-x-2">
+          <div className="hidden md:flex md:items-center md:space-x-1">
             {currentLinks.map(({ href, label }) => (
               <Link 
                 key={href}
@@ -77,7 +81,8 @@ export default function Navbar({ role = 'public' }) {
                   alert('Logout functionality will be connected to backend');
                   window.location.href = '/';
                 }}
-                className="ml-4 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                className="ml-3 px-4 py-2 bg-red-600 !text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 logout-btn-white"
+                style={{ color: '#ffffff !important' }}
               >
                 Logout
               </button>

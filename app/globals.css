@@ -210,6 +210,10 @@ a {
   transition: color 0.2s ease;
 }
 
+.logout-btn-white {
+  color: white !important;
+}
+
 a:hover {
   color: var(--secondary-blue-dark);
 }
@@ -322,4 +326,3 @@ select {
 .donor-login-btn:hover {
   color: #dc2626 !important; /* red-600 */
 }
-

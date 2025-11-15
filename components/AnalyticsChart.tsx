@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function AnalyticsChart({ title, data, type = 'bar' }) {
+type Props = {
+  title: string;
+  data: Record<string, number>;
+  type?: 'bar' | 'table';
+};
+
+export default function AnalyticsChart({ title, data, type = 'bar' }: Props) {
   if (!data || Object.keys(data).length === 0) {
     return (
       <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">

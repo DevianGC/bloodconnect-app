@@ -1,34 +1,42 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { bloodTypes, hospitals } from '@/lib/mockData';
+import type { RequestCreateInput } from '@/types/api';
 
-export default function RequestForm({ onSubmit, initialData = null }) {
-  const [formData, setFormData] = useState(initialData || {
-    hospitalName: '',
-    bloodType: '',
-    quantity: 1,
-    urgency: 'normal',
-    notes: '',
-  });
+type Props = {
+  onSubmit: (data: RequestCreateInput) => void;
+  initialData?: RequestCreateInput | null;
+};
 
-  const [errors, setErrors] = useState({});
+export default function RequestForm({ onSubmit, initialData = null }: Props) {
+  const [formData, setFormData] = useState<RequestCreateInput>(
+    initialData || {
+      hospitalName: '',
+      bloodType: '',
+      quantity: 1,
+      urgency: 'normal',
+      notes: '',
+    }
+  );
 
-  const handleChange = (e) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'quantity' ? Number(value) : value,
     }));
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
   const validate = () => {
-    const newErrors = {};
-    
+    const newErrors: Record<string, string> = {};
     if (!formData.hospitalName) {
       newErrors.hospitalName = 'Hospital name is required';
     }
@@ -38,12 +46,11 @@ export default function RequestForm({ onSubmit, initialData = null }) {
     if (!formData.quantity || formData.quantity < 1) {
       newErrors.quantity = 'Quantity must be at least 1';
     }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
       onSubmit(formData);
@@ -106,7 +113,7 @@ export default function RequestForm({ onSubmit, initialData = null }) {
           type="number"
           id="quantity"
           name="quantity"
-          min="1"
+          min={1}
           value={formData.quantity}
           onChange={handleChange}
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
@@ -142,10 +149,10 @@ export default function RequestForm({ onSubmit, initialData = null }) {
         <textarea
           id="notes"
           name="notes"
-          value={formData.notes}
+          value={formData.notes || ''}
           onChange={handleChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-          rows="4"
+          rows={4}
           placeholder="Enter any additional information..."
         />
       </div>

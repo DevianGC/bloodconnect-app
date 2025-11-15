@@ -30,7 +30,7 @@ export default function DonorLogin() {
       
       if (result) {
         localStorage.setItem('donorUser', JSON.stringify(result));
-        router.push('/donor/profile');
+        router.push('/donor/dashboard');
       } else {
         setError('Login failed');
       }
