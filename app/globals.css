@@ -214,6 +214,10 @@ a {
   color: white !important;
 }
 
+.stats-white-text {
+  color: white !important;
+}
+
 a:hover {
   color: var(--secondary-blue-dark);
 }
