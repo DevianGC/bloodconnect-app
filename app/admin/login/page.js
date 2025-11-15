@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import useAuthRequest from '../../../hooks/useAuthRequest';
+import useAuthRequest from '../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
 
 export default function AdminLogin() {
@@ -26,11 +26,11 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const result = await login(formData);
+      const result = await login({ ...formData, role: 'admin' });
       
-      if (result) {
+      if (result && result.success && result.data) {
         // In production, store auth token in localStorage/cookies
-        localStorage.setItem('adminUser', JSON.stringify(result));
+        localStorage.setItem('adminUser', JSON.stringify(result.data));
         router.push('/admin/dashboard');
       } else {
         setError('Login failed');

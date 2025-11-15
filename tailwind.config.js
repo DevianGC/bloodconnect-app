@@ -7,6 +7,30 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '0% 0%' },
+          '100%': { backgroundPosition: '200% 0%' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.2s ease-in-out',
+        slideUp: 'slideUp 0.3s ease-out',
+        scaleIn: 'scaleIn 0.25s ease-out',
+        shimmer: 'shimmer 1.5s linear infinite',
+      },
       colors: {
         // Define your custom colors based on your CSS variables
         'primary': 'var(--primary)',
@@ -44,6 +68,7 @@ module.exports = {
         'sm': 'var(--shadow-sm)',
         'md': 'var(--shadow-md)',
         'lg': 'var(--shadow-lg)',
+        'xl': '0 20px 40px rgba(0,0,0,0.1)',
       },
     },
   },

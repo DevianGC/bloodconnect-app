@@ -3,38 +3,31 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import useAuthRequest from '../../../hooks/useAuthRequest';
+import useAuthRequest from '../../hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
+import AuthForm from '../../../components/atomic/organisms/AuthForm';
 
 export default function DonorLogin() {
   const router = useRouter();
   const { login, isLoading, error: authError } = useAuthRequest();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setError('');
-  };
+  const fields = [
+    { name: 'email', label: 'Email Address', type: 'email', placeholder: 'your.email@example.com', required: true },
+    { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter your password', required: true },
+  ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const submit = async (values) => {
     setError('');
-
     try {
-      const result = await login(formData);
-      
-      if (result) {
-        localStorage.setItem('donorUser', JSON.stringify(result));
+      const result = await login({ ...values, role: 'donor' });
+      if (result && result.success && result.data) {
+        localStorage.setItem('donorUser', JSON.stringify(result.data));
         router.push('/donor/profile');
       } else {
         setError('Login failed');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     }
   };
@@ -53,59 +46,20 @@ export default function DonorLogin() {
           </p>
         </div>
 
-        <form className={styles.authForm} onSubmit={handleSubmit}>
-          {(error || authError) && (
-            <div className={styles.authError}>
-              {error || authError}
-            </div>
-          )}
+        <div className={styles.authHint}>
+          <strong>Demo credentials:</strong><br />
+          Email: juan.delacruz@email.com<br />
+          Password: donor123
+        </div>
 
-          <div className={styles.authHint}>
-            <strong>Demo credentials:</strong><br />
-            Email: juan.delacruz@email.com<br />
-            Password: donor123
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.formLabel}>
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={styles.formInput}
-              placeholder="your.email@example.com"
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.formLabel}>
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={styles.formInput}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            className={styles.btnPrimary}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+        <AuthForm
+          mode="login"
+          fields={fields}
+          onSubmit={submit}
+          isLoading={isLoading}
+          error={error || authError}
+          submitLabel="Sign In"
+        />
 
         <div className={styles.authFooter}>
           <p>Don't have an account?</p>

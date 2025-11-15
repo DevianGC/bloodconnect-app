@@ -1,0 +1,120 @@
+/* styles/admin.module.css */
+
+.adminLayout {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  gap: 0;
+  min-height: calc(100vh - 5rem);
+}
+
+.adminMain {
+  padding: 2rem;
+  background: rgb(var(--gray-100));
+}
+
+.adminHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.adminSubtitle {
+  color: rgb(var(--gray-600));
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.statCard {
+  background: rgb(var(--white));
+  border: 1px solid rgb(var(--gray-200));
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statIcon { font-size: 1.5rem; }
+.statContent { display: flex; flex-direction: column; }
+.statValue { font-weight: 800; font-size: 1.25rem; color: rgb(var(--gray-900)); }
+.statLabel { color: rgb(var(--gray-600)); font-weight: 600; }
+
+.section { margin-top: 2rem; }
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.sectionTitle { font-size: 1.25rem; font-weight: 800; color: rgb(var(--gray-900)); }
+
+.linkButton {
+  color: rgb(var(--red-700));
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.actionCard {
+  background: rgb(var(--white));
+  border: 1px solid rgb(var(--gray-200));
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-decoration: none;
+  color: rgb(var(--gray-900));
+}
+
+.actionIcon { font-size: 1.25rem; }
+
+.emptyState {
+  background: rgb(var(--white));
+  border: 1px solid rgb(var(--gray-200));
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.requestsList { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.requestCard { background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; }
+.requestHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+.requestDetails { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.requestDetail { color: rgb(var(--gray-800)); }
+.requestNotes { color: rgb(var(--gray-600)); margin-top: 0.5rem; }
+
+.urgencyBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.urgencynormal { background: rgb(var(--gray-200)); color: rgb(var(--gray-800)); }
+.urgencyhigh { background: rgb(var(--yellow-200)); color: rgb(var(--yellow-700)); }
+.urgencycritical { background: rgb(var(--red-200)); color: rgb(var(--red-700)); }
+
+.bloodTypeGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.bloodTypeCard { background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; text-align: center; }
+.bloodType { font-weight: 800; font-size: 1.25rem; color: rgb(var(--gray-900)); }
+.bloodTypeCount { color: rgb(var(--gray-600)); font-weight: 600; }
+
+.loading { display: grid; place-items: center; min-height: 50vh; }
+.spinner {
+  width: 2rem; height: 2rem; border: 3px solid rgb(var(--gray-300)); border-top-color: rgb(var(--red-600)); border-radius: 9999px; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.settingsList { display: grid; gap: 1rem; }
+.settingItem { display: flex; align-items: center; justify-content: space-between; background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; }
+.settingInfo h4 { margin: 0; }
+
+.btnSecondary { background: rgb(var(--gray-800)); color: rgb(var(--white)); border: none; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-weight: 700; }
+.btnDanger { background: rgb(var(--red-600)); color: rgb(var(--white)); border: none; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-weight: 700; }
+
+.dangerCard { background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; }
+.dangerItem { display: flex; align-items: center; justify-content: space-between; }
+
+.privacyLink { color: rgb(var(--gray-700)); text-decoration: none; }

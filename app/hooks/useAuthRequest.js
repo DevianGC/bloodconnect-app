@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import HttpService from '../service/HttpService';
 import { API_ENDPOINTS } from '../constants/apiEndpoints';

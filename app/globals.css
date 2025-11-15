@@ -31,6 +31,21 @@
   animation: slideUp 0.3s ease-out;
 }
 
+.transition-base {
+  transition: all 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeIn,
+  .animate-slideUp,
+  .animate-scaleIn {
+    animation: none !important;
+  }
+  .transition-base {
+    transition: none !important;
+  }
+}
+
 @layer base {
   :root {
     /* Color Palette - Professional & Minimalist */
@@ -322,4 +337,4 @@ select {
 .donor-login-btn:hover {
   color: #dc2626 !important; /* red-600 */
 }
-
+

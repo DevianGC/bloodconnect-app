@@ -37,7 +37,7 @@ export default function Navbar({ role = 'public' }) {
     }`;
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-white/80 backdrop-blur-md shadow-md border-b border-gray-100 sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
@@ -65,7 +65,7 @@ export default function Navbar({ role = 'public' }) {
               <Link 
                 key={href}
                 href={href} 
-                className={navLinkClass(isActive(href))}
+                className={`${navLinkClass(isActive(href))} transition-all duration-200`}
               >
                 {label}
               </Link>

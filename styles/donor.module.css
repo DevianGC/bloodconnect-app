@@ -1,0 +1,40 @@
+/* styles/donor.module.css */
+
+.donorMain { padding: 2rem; background: rgb(var(--gray-100)); }
+
+.loading { display: grid; place-items: center; min-height: 50vh; }
+.spinner { width: 2rem; height: 2rem; border: 3px solid rgb(var(--gray-300)); border-top-color: rgb(var(--red-600)); border-radius: 9999px; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.profileHeader { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
+.profileAvatar { width: 4rem; height: 4rem; border-radius: 9999px; background: rgb(var(--red-100)); display: grid; place-items: center; }
+.avatarIcon { font-size: 1.5rem; }
+.profileInfo h1 { margin: 0; font-size: 1.5rem; }
+.profileEmail { color: rgb(var(--gray-600)); }
+.profileBadges { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.bloodTypeBadge { background: rgb(var(--red-100)); color: rgb(var(--red-700)); border-radius: 0.5rem; padding: 0.25rem 0.5rem; font-weight: 700; }
+.bloodTypeLarge { font-size: 1rem; }
+.statusBadge { background: rgb(var(--gray-200)); color: rgb(var(--gray-800)); border-radius: 0.5rem; padding: 0.25rem 0.5rem; font-weight: 700; }
+.profileActions { display: flex; align-items: center; }
+.btnPrimary { background: rgb(var(--red-600)); color: rgb(var(--white)); border: none; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-weight: 700; text-decoration: none; }
+
+.section { margin-top: 2rem; }
+.sectionTitle { font-size: 1.25rem; font-weight: 800; color: rgb(var(--gray-900)); margin-bottom: 0.75rem; }
+
+.eligibilityCard { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; border-radius: 0.75rem; padding: 1rem; }
+.eligible { background: rgb(var(--green-500)); color: rgb(var(--white)); }
+.notEligible { background: rgb(var(--yellow-100)); color: rgb(var(--yellow-700)); }
+.eligibilityIcon { font-size: 1.5rem; }
+.eligibilityTitle { font-weight: 800; }
+.eligibilityMessage { font-weight: 600; }
+.eligibilityDetail { color: rgb(var(--gray-800)); }
+
+.infoCard { background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; }
+.infoGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.infoItem { display: flex; align-items: center; justify-content: space-between; }
+.infoLabel { color: rgb(var(--gray-600)); font-weight: 600; }
+.infoValue { color: rgb(var(--gray-900)); font-weight: 700; }
+
+.actionsGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.actionCard { background: rgb(var(--white)); border: 1px solid rgb(var(--gray-200)); border-radius: 0.75rem; padding: 1rem; text-decoration: none; color: rgb(var(--gray-900)); }
+.actionIcon { font-size: 1.25rem; }
