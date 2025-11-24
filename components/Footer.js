@@ -48,7 +48,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <span>📞</span>
-              <span>(047) 222-XXXX</span>
+              <span>09304433316</span>
             </li>
             <li className="flex items-center gap-2">
               <span>📧</span>
