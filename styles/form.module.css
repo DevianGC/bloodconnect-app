@@ -1,17 +1,353 @@
-.formGroup {
-  margin-bottom: 1rem;
+/* ============================================
+   FORM COMPONENTS - Modern Form Design
+   ============================================ */
+
+/* Form Container */
+.formContainer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
+.formCard {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.formTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* Form Groups */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Labels */
 .label {
   display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
   margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.labelRequired::after {
+  content: ' *';
+  color: #dc2626;
+}
+
+/* Input Fields */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #94a3b8;
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #dc2626;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+/* Input with icon */
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.inputWithIcon {
+  padding-left: 3rem;
+}
+
+/* Select dropdown */
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25rem;
+  padding-right: 3rem;
+  cursor: pointer;
+}
+
+/* Textarea */
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Checkbox & Radio */
+.checkboxGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.checkboxGroup:hover {
+  border-color: #e2e8f0;
+  background: #ffffff;
+}
+
+.checkbox,
+.radio {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  accent-color: #dc2626;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 0.9375rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.checkboxLabel a {
+  color: #dc2626;
   font-weight: 600;
 }
 
-.input {
+/* Error States */
+.inputError {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.errorMessage::before {
+  content: '⚠';
+}
+
+/* Success States */
+.inputSuccess {
+  border-color: #059669 !important;
+}
+
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: #059669;
+  font-weight: 500;
+}
+
+/* Helper Text */
+.helperText {
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+/* Submit Button */
+.submitButton {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 1rem 1.5rem;
   font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.35);
+  margin-top: 1rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px 0 rgba(220, 38, 38, 0.45);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary Button */
+.secondaryButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+/* Form Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+/* Password Toggle */
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.25rem;
+}
+
+.passwordToggle:hover {
+  color: #0f172a;
+}
+
+/* Form Sections */
+.formSection {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.formSection:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Progress Steps */
+.progressSteps {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.progressStep {
+  width: 2.5rem;
+  height: 0.25rem;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+.progressStep.active {
+  background: #dc2626;
+}
+
+.progressStep.completed {
+  background: #059669;
 }
