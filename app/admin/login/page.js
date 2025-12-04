@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useAuthRequest from '@/app/hooks/useAuthRequest';
-import Button from '@/components/atomic/atoms/Button';
+import styles from '../../../styles/auth.module.css';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -47,96 +47,72 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/" className="flex justify-center items-center gap-2 mb-6">
-          <span className="text-4xl">🩸</span>
-          <span className="text-2xl font-bold text-gray-900">BloodConnect Olongapo</span>
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Admin Login
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Sign in to manage blood requests and donors
-        </p>
-      </div>
+    <div className={styles.authContainer}>
+      <div className={styles.authCard}>
+        <div className={styles.authHeader}>
+          <Link href="/" className={styles.authLogo}>
+            <span className={styles.authLogoIcon}>🩸</span>
+            <span>BloodConnect</span>
+          </Link>
+          <h2 className={styles.authTitle}>Admin Portal</h2>
+          <p className={styles.authSubtitle}>
+            Secure access for system administrators
+          </p>
+        </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {(error || authError) && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
-                {error || authError}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="admin@bloodconnect.com"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                />
-              </div>
+        <form className={styles.authForm} onSubmit={handleSubmit}>
+          {(error || authError) && (
+            <div className={styles.authError}>
+              {error || authError}
             </div>
+          )}
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                />
-              </div>
-            </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.formLabel}>
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={styles.formInput}
+              placeholder="admin@bloodconnect.com"
+              required
+            />
+          </div>
 
-            <div>
-              <Button
-                type="submit"
-                variant="primary"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-            </div>
-          </form>
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.formLabel}>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={styles.formInput}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Or
-                </span>
-              </div>
-            </div>
+          <button 
+            type="submit" 
+            className={styles.btnPrimary}
+            disabled={isLoading}
+          >
+            {isLoading ? '⏳ Verifying...' : ' Sign In to Dashboard'}
+          </button>
+        </form>
 
-            <div className="mt-6 flex justify-center">
-              <Link href="/" className="text-sm font-medium text-red-600 hover:text-red-500">
-                ← Back to Home
-              </Link>
-            </div>
+        <div className={styles.authFooter}>
+          <div style={{ marginTop: '1.5rem' }}>
+            <Link href="/" className={styles.authLink}>
+              ← Back to Home
+            </Link>
           </div>
         </div>
       </div>
