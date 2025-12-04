@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 
 export type DonorStatus = 'active' | 'inactive' | string;
 export interface Donor {
-  id: number;
+  id: string;
   name: string;
   email: string;
   bloodType: string;
@@ -22,7 +22,7 @@ export interface Donor {
 export type RequestStatus = 'active' | 'fulfilled' | string;
 export type Urgency = 'normal' | 'urgent' | 'critical' | string;
 export interface Request {
-  id: number;
+  id: string;
   hospitalName: string;
   bloodType: string;
   quantity: number;
@@ -43,7 +43,7 @@ export interface RequestCreateInput {
 
 export type AlertStatus = 'sent' | 'fulfilled' | string;
 export interface Alert {
-  id: number;
+  id: string;
   title: string;
   message: string;
   hospitalName: string;
@@ -90,7 +90,7 @@ export interface DonorCreateInput {
 }
 
 export interface BloodRequest {
-  id: number;
+  id: string;
   hospitalName: string;
   bloodType: string;
   quantity: number;

@@ -56,7 +56,7 @@ export default function AdminDonors() {
     try {
       const result = await getDonors();
       if (result.success) {
-        setDonors(result.data || []);
+        setDonors((result.data as any) || []);
       }
     } catch (error) {
       console.error('Error loading donors:', error);
@@ -115,7 +115,7 @@ export default function AdminDonors() {
     setShowModal(true);
   };
 
-  const handleDeactivateDonor = async (id: number) => {
+  const handleDeactivateDonor = async (id: string) => {
     const donor = donors.find(d => d.id === id);
     if (donor && confirm(`Are you sure you want to deactivate ${donor.name}?`)) {
       try {
@@ -164,23 +164,24 @@ export default function AdminDonors() {
 
   if (loading) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Loading donors...</p>
-      </div>
+      <AdminTemplate title="Donor Management">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </AdminTemplate>
     );
   }
 
   return (
     <AdminTemplate title="Donor Management">
-      <div className={styles.adminHeader}>
-        <p className={styles.adminSubtitle}>View and manage registered blood donors</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <p className="text-gray-600">View and manage registered blood donors</p>
         <Button onClick={handleAddDonor} variant="primary">+ Add Donor</Button>
       </div>
 
       {/* Filters */}
-      <div className={styles.filtersSection}>
-        <div className={styles.filtersGrid}>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <FormField
             label="Search"
             type="text"
@@ -189,13 +190,13 @@ export default function AdminDonors() {
             value={filters.search || ''}
             onChange={handleFilterChange}
           />
-          <div className={styles.filterGroup}>
-            <label>Blood Type</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-gray-700">Blood Type</label>
             <select
               name="bloodType"
               value={filters.bloodType || ''}
               onChange={handleFilterChange}
-              className={styles.filterSelect}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
             >
               <option value="">All Blood Types</option>
               {bloodTypes.map(type => (
@@ -203,13 +204,13 @@ export default function AdminDonors() {
               ))}
             </select>
           </div>
-          <div className={styles.filterGroup}>
-            <label>Barangay</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-gray-700">Barangay</label>
             <select
               name="barangay"
               value={filters.barangay || ''}
               onChange={handleFilterChange}
-              className={styles.filterSelect}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
             >
               <option value="">All Barangays</option>
               {barangays.map(b => (
@@ -220,11 +221,13 @@ export default function AdminDonors() {
         </div>
       </div>
 
-      <DonorList
-        donors={filteredDonors}
-        onEdit={handleEditDonor}
-        onDeactivate={handleDeactivateDonor}
-      />
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <DonorList
+          donors={filteredDonors}
+          onEdit={handleEditDonor}
+          onDeactivate={handleDeactivateDonor}
+        />
+      </div>
 
       {showModal && (
         <Modal
@@ -232,18 +235,18 @@ export default function AdminDonors() {
           title={modalMode === 'add' ? 'Add New Donor' : 'Edit Donor'}
           onClose={() => setShowModal(false)}
           footer={
-            <div className={styles.formActions}>
-              <Button type="submit" variant="primary">
-                {modalMode === 'add' ? 'Add Donor' : 'Save Changes'}
-              </Button>
+            <div className="flex justify-end gap-3 mt-6">
               <Button type="button" onClick={() => setShowModal(false)} variant="secondary">
                 Cancel
+              </Button>
+              <Button type="submit" variant="primary" form="donorForm">
+                {modalMode === 'add' ? 'Add Donor' : 'Save Changes'}
               </Button>
             </div>
           }
         >
-          <form onSubmit={handleSubmit} className={styles.modalForm}>
-            <div className={styles.formGrid}>
+          <form id="donorForm" onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 label="Name"
                 type="text"
@@ -301,14 +304,17 @@ export default function AdminDonors() {
                 value={formData.lastDonation}
                 onChange={handleFormChange}
               />
-              <div className={styles.checkboxGroup}>
-                <FormField
-                  label="Receive Email Alerts"
-                  type="checkbox"
-                  name="emailAlerts"
-                  checked={formData.emailAlerts}
-                  onChange={handleFormChange}
-                />
+              <div className="flex items-center h-full pt-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="emailAlerts"
+                    checked={formData.emailAlerts}
+                    onChange={handleFormChange}
+                    className="w-5 h-5 text-red-600 rounded focus:ring-red-500 border-gray-300"
+                  />
+                  <span className="text-gray-700">Receive Email Alerts</span>
+                </label>
               </div>
             </div>
           </form>

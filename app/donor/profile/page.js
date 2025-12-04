@@ -13,7 +13,7 @@ export default function DonorProfile() {
   const [donor, setDonor] = useState(null);
   const [eligibility, setEligibility] = useState(null);
 
-  useEffect(() => {
+  useEffect(() => { 
     const donorUser = localStorage.getItem('donorUser');
     if (!donorUser) {
       router.push('/donor/login');

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
-import { bloodTypes, hospitals } from '@/lib/mockData';
+import React, { useState, useEffect } from 'react';
+import { bloodTypes } from '@/lib/mockData';
+import { getAllHospitals } from '@/lib/db';
 import type { RequestCreateInput } from '@/types/api';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function RequestForm({ onSubmit, initialData = null }: Props) {
+  const [hospitals, setHospitals] = useState<string[]>([]);
   const [formData, setFormData] = useState<RequestCreateInput>(
     initialData || {
       hospitalName: '',
@@ -19,6 +21,19 @@ export default function RequestForm({ onSubmit, initialData = null }: Props) {
       notes: '',
     }
   );
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const hospitalList = await getAllHospitals();
+        setHospitals(hospitalList.map((h: any) => h.name));
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
+        // Fallback to empty or static list if needed
+      }
+    };
+    fetchHospitals();
+  }, []);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 

@@ -1,7 +1,16 @@
 // Gamification System - Badges, Points, and Achievements
 import { v4 as uuidv4 } from 'uuid';
 import type { Badge, BadgeType, DonorStats, LeaderboardEntry } from '@/types/appointments';
+import type { Donor } from '@/types/api';
 import { isRareBloodType, BloodType } from './bloodCompatibility';
+import * as db from './db';
+
+interface Donation {
+  id: string;
+  date: string;
+  status: string;
+  [key: string]: any;
+}
 
 // Badge definitions
 export const BADGE_DEFINITIONS: Record<BadgeType, {
@@ -68,9 +77,6 @@ export const POINTS = {
   RARE_BLOOD_BONUS: 30, // Extra points for rare blood types
 };
 
-// Mock donor stats storage
-const donorStats: Map<number | string, DonorStats> = new Map();
-
 // Initialize default stats for a donor
 const getDefaultStats = (): DonorStats => ({
   totalDonations: 0,
@@ -87,41 +93,41 @@ const getDefaultStats = (): DonorStats => ({
  * Get donor stats
  */
 export const getDonorStats = async (donorId: number | string): Promise<DonorStats> => {
-  let stats = donorStats.get(donorId);
-  
-  if (!stats) {
-    // Initialize with mock data for demo
-    stats = {
-      totalDonations: 3,
-      livesSaved: 9,
-      streakDays: 2,
-      lastDonation: '2025-08-15',
-      nextEligibleDate: '2025-10-10',
-      rank: 15,
-      points: 350,
-      badges: [
-        {
-          id: uuidv4(),
-          type: 'first-donation',
-          name: BADGE_DEFINITIONS['first-donation'].name,
-          description: BADGE_DEFINITIONS['first-donation'].description,
-          icon: BADGE_DEFINITIONS['first-donation'].icon,
-          earnedAt: '2025-01-20T10:00:00Z',
-        },
-        {
-          id: uuidv4(),
-          type: 'regular-donor',
-          name: BADGE_DEFINITIONS['regular-donor'].name,
-          description: BADGE_DEFINITIONS['regular-donor'].description,
-          icon: BADGE_DEFINITIONS['regular-donor'].icon,
-          earnedAt: '2025-08-15T14:30:00Z',
-        },
-      ],
-    };
-    donorStats.set(donorId, stats);
+  // In a real app, fetch from DB. For now, calculate from donation history
+  try {
+    const history = (await db.getDonationHistory(donorId)) as Donation[];
+    const completed = history.filter(r => r.status === 'completed');
+    
+    const stats = getDefaultStats();
+    stats.totalDonations = completed.length;
+    stats.livesSaved = stats.totalDonations * 3;
+    stats.points = stats.totalDonations * POINTS.DONATION_COMPLETED; // Simplified points calc
+    
+    if (completed.length > 0) {
+        const sorted = completed.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        stats.lastDonation = sorted[0].date;
+        
+        const nextDate = new Date(stats.lastDonation);
+        nextDate.setDate(nextDate.getDate() + 56);
+        stats.nextEligibleDate = nextDate.toISOString().split('T')[0];
+    }
+    
+    // Recalculate badges based on history
+    const badges = checkForNewBadges(stats); // Pass blood type if available
+    stats.badges = badges.map(type => ({
+        id: uuidv4(),
+        type,
+        name: BADGE_DEFINITIONS[type].name,
+        description: BADGE_DEFINITIONS[type].description,
+        icon: BADGE_DEFINITIONS[type].icon,
+        earnedAt: new Date().toISOString() // Approximate
+    }));
+    
+    return stats;
+  } catch (error) {
+    console.error("Error getting donor stats:", error);
+    return getDefaultStats();
   }
-  
-  return stats;
 };
 
 /**
@@ -131,10 +137,12 @@ export const recordDonation = async (
   donorId: number | string, 
   bloodType: BloodType
 ): Promise<{ stats: DonorStats; newBadges: Badge[] }> => {
+  // This logic should ideally be server-side or in a cloud function triggered by DB update
+  // For now, we just return the calculated stats
   const stats = await getDonorStats(donorId);
   const newBadges: Badge[] = [];
   
-  // Update basic stats
+  // Update basic stats (simulated as if donation just happened)
   stats.totalDonations += 1;
   stats.livesSaved = stats.totalDonations * 3;
   stats.lastDonation = new Date().toISOString();
@@ -170,7 +178,8 @@ export const recordDonation = async (
     }
   }
   
-  donorStats.set(donorId, stats);
+  // Save stats to DB if we had a stats collection
+  // await db.updateDonorStats(donorId, stats);
   
   return { stats, newBadges };
 };
@@ -217,7 +226,7 @@ export const recordUrgentResponse = async (donorId: number | string): Promise<{ 
     stats.badges.push(newBadge);
   }
   
-  donorStats.set(donorId, stats);
+  // Save stats
   
   return { stats, newBadge };
 };
@@ -226,73 +235,37 @@ export const recordUrgentResponse = async (donorId: number | string): Promise<{ 
  * Get leaderboard
  */
 export const getLeaderboard = async (limit = 10): Promise<LeaderboardEntry[]> => {
-  // Mock leaderboard data
-  const leaderboard: LeaderboardEntry[] = [
-    {
-      rank: 1,
-      donorId: 5,
-      donorName: 'Carlos Mendoza',
-      bloodType: 'O-',
-      barangay: 'New Ilalim',
-      totalDonations: 25,
-      points: 2750,
-      badges: [
-        { id: '1', type: 'life-saver', name: 'Life Saver', description: '', icon: '❤️‍🔥', earnedAt: '' },
-        { id: '2', type: 'rare-blood', name: 'Rare Gem', description: '', icon: '💎', earnedAt: '' },
-      ],
-    },
-    {
-      rank: 2,
-      donorId: 8,
-      donorName: 'Elena Cruz',
-      bloodType: 'AB-',
-      barangay: 'Asinan',
-      totalDonations: 18,
-      points: 2100,
-      badges: [
-        { id: '3', type: 'hero-donor', name: 'Hero Donor', description: '', icon: '🦸', earnedAt: '' },
-      ],
-    },
-    {
-      rank: 3,
-      donorId: 1,
-      donorName: 'Juan Dela Cruz',
-      bloodType: 'O+',
-      barangay: 'Barretto',
-      totalDonations: 12,
-      points: 1350,
-      badges: [
-        { id: '4', type: 'hero-donor', name: 'Hero Donor', description: '', icon: '🦸', earnedAt: '' },
-      ],
-    },
-    {
-      rank: 4,
-      donorId: 2,
-      donorName: 'Maria Santos',
-      bloodType: 'A+',
-      barangay: 'East Bajac-Bajac',
-      totalDonations: 8,
-      points: 900,
-      badges: [
-        { id: '5', type: 'regular-donor', name: 'Regular Donor', description: '', icon: '💪', earnedAt: '' },
-      ],
-    },
-    {
-      rank: 5,
-      donorId: 6,
-      donorName: 'Rosa Fernandez',
-      bloodType: 'A-',
-      barangay: 'Pag-asa',
-      totalDonations: 6,
-      points: 780,
-      badges: [
-        { id: '6', type: 'regular-donor', name: 'Regular Donor', description: '', icon: '💪', earnedAt: '' },
-        { id: '7', type: 'rare-blood', name: 'Rare Gem', description: '', icon: '💎', earnedAt: '' },
-      ],
-    },
-  ];
-  
-  return leaderboard.slice(0, limit);
+  // In a real app, this would be a complex aggregation query
+  // For now, return empty or fetch all donors and sort (inefficient but works for small data)
+  try {
+      const donors = (await db.getAllDonors()) as unknown as Donor[];
+      // We need to calculate points for each donor to sort them
+      // This is heavy, but without a dedicated stats collection, it's the only way
+      // Or we just return top donors by donation count
+      
+      const leaderboard = await Promise.all(donors.map(async (donor) => {
+          const stats = await getDonorStats(donor.id);
+          return {
+              rank: 0, // assigned later
+              donorId: donor.id,
+              donorName: donor.name,
+              bloodType: donor.bloodType,
+              barangay: donor.barangay,
+              totalDonations: stats.totalDonations,
+              points: stats.points,
+              badges: stats.badges
+          };
+      }));
+      
+      return leaderboard
+        .sort((a, b) => b.points - a.points)
+        .slice(0, limit)
+        .map((entry, index) => ({ ...entry, rank: index + 1 }));
+        
+  } catch (error) {
+      console.error("Error getting leaderboard:", error);
+      return [];
+  }
 };
 
 /**

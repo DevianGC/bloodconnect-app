@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../../components/Navbar';
-import Sidebar from '../../../components/Sidebar';
-import AnalyticsChart from '../../../components/AnalyticsChart';
-import { getAnalytics } from '../../../lib/api';
-import styles from '../../../styles/admin.module.css';
+import AdminTemplate from '@/components/atomic/templates/AdminTemplate';
+import AnalyticsChart from '@/components/AnalyticsChart';
+import StatCard from '@/components/atomic/molecules/StatCard';
+import Button from '@/components/atomic/atoms/Button';
+import { getAnalytics } from '@/lib/api';
 
 export default function AdminAnalytics() {
   const router = useRouter();
@@ -37,126 +37,113 @@ export default function AdminAnalytics() {
 
   if (loading) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Loading analytics...</p>
-      </div>
+      <AdminTemplate title="Analytics & Reports">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
+      </AdminTemplate>
     );
   }
 
   return (
-    <>
-      <Navbar role="admin" />
-      <div className={styles.adminLayout}>
-        <Sidebar role="admin" />
-        <main className={styles.adminMain}>
-          <div className={styles.adminHeader}>
-            <h1>Analytics & Reports</h1>
-            <p className={styles.adminSubtitle}>Donor statistics and blood request trends</p>
+    <AdminTemplate title="Analytics & Reports">
+      <div className="space-y-8">
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Donors"
+            value={analytics?.totalDonors || 0}
+            icon="👥"
+            trend="+12% this month"
+            trendUp={true}
+          />
+          <StatCard
+            title="Active Requests"
+            value={analytics?.activeRequests || 0}
+            icon="🩸"
+            trend="Needs attention"
+            trendUp={false}
+          />
+          <StatCard
+            title="Total Requests"
+            value={analytics?.totalRequests || 0}
+            icon="📋"
+            trend="+5% this month"
+            trendUp={true}
+          />
+          <StatCard
+            title="Fulfilled Requests"
+            value={(analytics?.totalRequests || 0) - (analytics?.activeRequests || 0)}
+            icon="✅"
+            trend="85% success rate"
+            trendUp={true}
+          />
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <AnalyticsChart
+              title="Donors by Blood Type"
+              data={analytics?.donorsByBloodType}
+              type="bar"
+            />
           </div>
 
-          {/* Summary Stats */}
-          <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>👥</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.totalDonors || 0}</div>
-                <div className={styles.statLabel}>Total Donors</div>
-              </div>
-            </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <AnalyticsChart
+              title="Donors by Barangay"
+              data={analytics?.donorsByBarangay}
+              type="table"
+            />
+          </div>
+        </div>
 
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>🩸</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.activeRequests || 0}</div>
-                <div className={styles.statLabel}>Active Requests</div>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>📋</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>{analytics?.totalRequests || 0}</div>
-                <div className={styles.statLabel}>Total Requests</div>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>✅</div>
-              <div className={styles.statContent}>
-                <div className={styles.statValue}>
-                  {analytics?.totalRequests - analytics?.activeRequests || 0}
+        {/* Recent Activity */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
+          {analytics?.recentActivity && analytics.recentActivity.length > 0 ? (
+            <div className="space-y-4">
+              {analytics.recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="text-sm text-gray-500">{activity.date}</div>
+                  <div className="font-medium text-gray-900">{activity.event}</div>
+                  <div className="text-sm font-semibold text-red-600">{activity.count}</div>
                 </div>
-                <div className={styles.statLabel}>Fulfilled Requests</div>
-              </div>
+              ))}
             </div>
-          </div>
-
-          {/* Charts */}
-          <div className={styles.chartsGrid}>
-            <div className={styles.chartCard}>
-              <AnalyticsChart
-                title="Donors by Blood Type"
-                data={analytics?.donorsByBloodType}
-                type="bar"
-              />
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p>No recent activity to display.</p>
             </div>
+          )}
+        </div>
 
-            <div className={styles.chartCard}>
-              <AnalyticsChart
-                title="Donors by Barangay"
-                data={analytics?.donorsByBarangay}
-                type="table"
-              />
-            </div>
+        {/* Export Options */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Export Reports</h2>
+          <div className="flex flex-wrap gap-4">
+            <Button 
+              variant="secondary"
+              onClick={() => alert('CSV export will be implemented with backend')}
+            >
+              📊 Export to CSV
+            </Button>
+            <Button 
+              variant="secondary"
+              onClick={() => alert('PDF export will be implemented with backend')}
+            >
+              📄 Export to PDF
+            </Button>
+            <Button 
+              variant="secondary"
+              onClick={() => alert('Print functionality will be implemented')}
+            >
+              🖨️ Print Report
+            </Button>
           </div>
-
-          {/* Recent Activity */}
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Recent Activity</h2>
-            {analytics?.recentActivity && analytics.recentActivity.length > 0 ? (
-              <div className={styles.activityList}>
-                {analytics.recentActivity.map((activity, index) => (
-                  <div key={index} className={styles.activityItem}>
-                    <div className={styles.activityDate}>{activity.date}</div>
-                    <div className={styles.activityEvent}>{activity.event}</div>
-                    <div className={styles.activityCount}>{activity.count}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.emptyState}>
-                <p>No recent activity to display.</p>
-              </div>
-            )}
-          </div>
-
-          {/* Export Options */}
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Export Reports</h2>
-            <div className={styles.exportButtons}>
-              <button 
-                className={styles.btnSecondary}
-                onClick={() => alert('CSV export will be implemented with backend')}
-              >
-                📊 Export to CSV
-              </button>
-              <button 
-                className={styles.btnSecondary}
-                onClick={() => alert('PDF export will be implemented with backend')}
-              >
-                📄 Export to PDF
-              </button>
-              <button 
-                className={styles.btnSecondary}
-                onClick={() => alert('Print functionality will be implemented')}
-              >
-                🖨️ Print Report
-              </button>
-            </div>
-          </div>
-        </main>
+        </div>
       </div>
-    </>
+    </AdminTemplate>
   );
 }

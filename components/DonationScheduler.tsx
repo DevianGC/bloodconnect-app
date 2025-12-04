@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { format, addDays, startOfWeek, isSameDay, isToday, isBefore } from 'date-fns';
 import { useAvailableSlots, useCreateAppointment } from '@/app/hooks/queries/useAppointments';
-import { hospitals } from '@/lib/appointments';
+import { getAllHospitals } from '@/lib/db';
 import type { TimeSlot } from '@/types/appointments';
 
 interface DonationSchedulerProps {
@@ -12,11 +12,30 @@ interface DonationSchedulerProps {
 }
 
 export default function DonationScheduler({ donorId, onScheduled }: DonationSchedulerProps) {
+  const [hospitals, setHospitals] = useState<any[]>([]);
+  const [loadingHospitals, setLoadingHospitals] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedHospital, setSelectedHospital] = useState(hospitals[0].id);
+  const [selectedHospital, setSelectedHospital] = useState('');
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [notes, setNotes] = useState('');
   const [step, setStep] = useState<'date' | 'time' | 'confirm'>('date');
+
+  React.useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const data = await getAllHospitals();
+        setHospitals(data);
+        if (data.length > 0) {
+          setSelectedHospital(data[0].id);
+        }
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
+      } finally {
+        setLoadingHospitals(false);
+      }
+    };
+    fetchHospitals();
+  }, []);
 
   const dateString = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '';
   
@@ -95,12 +114,17 @@ export default function DonationScheduler({ donorId, onScheduled }: DonationSche
             setSelectedSlot(null);
           }}
           className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500"
+          disabled={loadingHospitals}
         >
-          {hospitals.map(hospital => (
-            <option key={hospital.id} value={hospital.id}>
-              {hospital.name}
-            </option>
-          ))}
+          {loadingHospitals ? (
+            <option>Loading hospitals...</option>
+          ) : (
+            hospitals.map(hospital => (
+              <option key={hospital.id} value={hospital.id}>
+                {hospital.name}
+              </option>
+            ))
+          )}
         </select>
         {selectedHospitalData && (
           <p className="text-sm text-gray-500 mt-1">
@@ -116,7 +140,7 @@ export default function DonationScheduler({ donorId, onScheduled }: DonationSche
           <div className="grid grid-cols-7 gap-2">
             {dates.map((date) => {
               const dayName = format(date, 'EEE');
-              const isValidDay = selectedHospitalData?.donationDays.includes(format(date, 'EEEE'));
+              const isValidDay = selectedHospitalData?.donationDays?.includes(format(date, 'EEEE'));
               const isPast = isBefore(date, today) && !isToday(date);
               
               return (
@@ -142,7 +166,7 @@ export default function DonationScheduler({ donorId, onScheduled }: DonationSche
             })}
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            💡 {selectedHospitalData?.name} accepts donations on: {selectedHospitalData?.donationDays.join(', ')}
+            💡 {selectedHospitalData?.name} accepts donations on: {selectedHospitalData?.donationDays?.join(', ')}
           </p>
         </div>
       )}

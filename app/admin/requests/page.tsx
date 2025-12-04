@@ -8,7 +8,6 @@ import FormField from '@/components/atomic/molecules/FormField';
 import Modal from '@/components/Modal';
 import { getRequests, updateRequestStatus, deleteRequest } from '@/lib/api';
 import type { BloodRequest, BloodRequestFilters } from '@/types/api';
-import styles from '@/styles/admin.module.css';
 
 export default function RequestsManagement() {
   const [requests, setRequests] = useState<BloodRequest[]>([]);
@@ -36,7 +35,7 @@ export default function RequestsManagement() {
       setLoading(true);
       const result = await getRequests();
       if (result.success) {
-        setRequests(result.data || []);
+        setRequests((result.data as any) || []);
       }
     } catch (error) {
       console.error('Error fetching requests:', error);
@@ -75,7 +74,7 @@ export default function RequestsManagement() {
     setShowModal(true);
   };
 
-  const handleUpdateStatus = async (id: number, status: string) => {
+  const handleUpdateStatus = async (id: string, status: string) => {
     try {
       await updateRequestStatus(id, status);
       await fetchRequests();
@@ -84,7 +83,7 @@ export default function RequestsManagement() {
     }
   };
 
-  const handleDeleteRequest = async (id: number) => {
+  const handleDeleteRequest = async (id: string) => {
     if (confirm('Are you sure you want to delete this request?')) {
       try {
         await deleteRequest(id);
@@ -136,17 +135,20 @@ export default function RequestsManagement() {
   if (loading) {
     return (
       <AdminTemplate title="Blood Requests">
-        <div className={styles.loading}>Loading requests...</div>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+        </div>
       </AdminTemplate>
     );
   }
 
   return (
     <AdminTemplate title="Blood Requests">
-      <div className={styles.adminContent}>
-        <div className={styles.filtersSection}>
-          <h2>Filters</h2>
-          <div className={styles.filterGrid}>
+      <div className="space-y-8">
+        {/* Filters */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Filters</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FormField
               label="Blood Type"
               type="select"
@@ -174,12 +176,14 @@ export default function RequestsManagement() {
           </div>
         </div>
 
-        <RequestList
-          requests={filteredRequests}
-          onView={handleViewRequest}
-          onUpdateStatus={handleUpdateStatus}
-          onDelete={handleDeleteRequest}
-        />
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <RequestList
+            requests={filteredRequests}
+            onView={handleViewRequest}
+            onUpdateStatus={handleUpdateStatus}
+            onDelete={handleDeleteRequest}
+          />
+        </div>
 
         {showModal && currentRequest && (
           <Modal
@@ -187,18 +191,25 @@ export default function RequestsManagement() {
             title={modalMode === 'view' ? 'Request Details' : 'Edit Request'}
             onClose={() => setShowModal(false)}
             footer={
-              <div className={styles.formActions}>
-                <Button type="submit" variant="primary" disabled={modalMode === 'view'}>
-                  {modalMode === 'view' ? 'View Mode' : 'Save Changes'}
-                </Button>
+              <div className="flex justify-end gap-3 mt-6">
                 <Button type="button" onClick={() => setShowModal(false)} variant="secondary">
                   Close
                 </Button>
+                {modalMode === 'edit' && (
+                  <Button type="submit" variant="primary" form="requestForm">
+                    Save Changes
+                  </Button>
+                )}
+                {modalMode === 'view' && (
+                  <Button type="button" onClick={() => setModalMode('edit')} variant="primary">
+                    Edit Request
+                  </Button>
+                )}
               </div>
             }
           >
-            <form onSubmit={handleSubmit} className={styles.modalForm}>
-              <div className={styles.formGrid}>
+            <form id="requestForm" onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   label="Hospital Name"
                   type="text"
@@ -248,7 +259,7 @@ export default function RequestsManagement() {
                   required
                 />
               </div>
-              <div className={styles.formGrid}>
+              <div className="grid grid-cols-1 gap-6">
                 <FormField
                   label="Notes"
                   type="textarea"
@@ -258,7 +269,7 @@ export default function RequestsManagement() {
                   disabled={modalMode === 'view'}
                 />
               </div>
-              <div className={styles.formGrid}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
                 <FormField
                   label="Created At"
                   type="text"

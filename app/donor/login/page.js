@@ -3,32 +3,16 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import useAuthRequest from '@/app/hooks/useAuthRequest';
 import styles from '../../../styles/auth.module.css';
-
-// Demo donor data for quick login
-const DEMO_DONOR = {
-  id: 1,
-  name: "Juan Dela Cruz",
-  email: "juan.delacruz@email.com",
-  bloodType: "O+",
-  phone: "+63 917 123 4567",
-  address: "123 Main Street, Olongapo City",
-  lastDonation: "2024-01-15",
-  totalDonations: 5,
-  status: "Active",
-  eligibleToDoante: true,
-  nextEligibleDate: "2024-04-15",
-  achievements: ["first_donation", "regular_donor", "life_saver"],
-  points: 500
-};
 
 export default function DonorLogin() {
   const router = useRouter();
+  const { login, isLoading, error: authError } = useAuthRequest();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -37,35 +21,20 @@ export default function DonorLogin() {
     setError('');
   };
 
-  const handleQuickLogin = () => {
-    setIsLoading(true);
-    // Store demo donor data and redirect
-    localStorage.setItem('donorUser', JSON.stringify(DEMO_DONOR));
-    localStorage.setItem('isLoggedIn', 'true');
-    
-    setTimeout(() => {
-      router.push('/donor/dashboard');
-    }, 500);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
 
-    // Check for demo credentials
-    if (formData.email === 'juan.delacruz@email.com' && formData.password === 'donor123') {
-      localStorage.setItem('donorUser', JSON.stringify(DEMO_DONOR));
-      localStorage.setItem('isLoggedIn', 'true');
-      router.push('/donor/dashboard');
-      return;
+    try {
+      const result = await login(formData);
+      if (result && result.success) {
+        router.push('/donor/dashboard');
+      }
+    } catch (err) {
+      // Error is handled by useAuthRequest but we can set local error state if needed
+      // or rely on authError from hook
+      console.error(err);
     }
-
-    // For other credentials, show error
-    setTimeout(() => {
-      setIsLoading(false);
-      setError('Invalid email or password. Try the demo credentials!');
-    }, 1000);
   };
 
   return (
@@ -83,42 +52,11 @@ export default function DonorLogin() {
         </div>
 
         <form className={styles.authForm} onSubmit={handleSubmit}>
-          {error && (
+          {(error || authError) && (
             <div className={styles.authError}>
-              {error}
+              {error || authError}
             </div>
           )}
-
-          <button 
-            type="button"
-            onClick={handleQuickLogin}
-            className={styles.btnPrimary}
-            style={{ 
-              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-              boxShadow: '0 4px 14px 0 rgba(5, 150, 105, 0.35)'
-            }}
-            disabled={isLoading}
-          >
-            🚀 Quick Demo Login
-          </button>
-
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '1rem',
-            color: '#94a3b8',
-            fontSize: '0.875rem'
-          }}>
-            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-            <span>or login manually</span>
-            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-          </div>
-
-          <div className={styles.authHint}>
-            <strong>Demo credentials:</strong><br />
-            📧 juan.delacruz@email.com<br />
-            🔑 donor123
-          </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.formLabel}>

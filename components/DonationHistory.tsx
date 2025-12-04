@@ -7,9 +7,10 @@ import type { DonationRecord, DonationCertificate } from '@/types/appointments';
 interface DonationHistoryProps {
   donations: DonationRecord[];
   onViewCertificate?: (certificateId: string) => void;
+  variant?: 'card' | 'list';
 }
 
-export function DonationHistory({ donations, onViewCertificate }: DonationHistoryProps) {
+export function DonationHistory({ donations, onViewCertificate, variant = 'card' }: DonationHistoryProps) {
   if (donations.length === 0) {
     return (
       <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
@@ -20,74 +21,79 @@ export function DonationHistory({ donations, onViewCertificate }: DonationHistor
     );
   }
 
+  const content = (
+    <div className="space-y-3">
+      {donations.map((donation, index) => (
+        <div
+          key={donation.id}
+          className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+        >
+          {/* Date Column */}
+          <div className="text-center min-w-[60px]">
+            <div className="text-2xl font-bold text-red-600">
+              {format(new Date(donation.date), 'd')}
+            </div>
+            <div className="text-xs text-gray-500">
+              {format(new Date(donation.date), 'MMM yyyy')}
+            </div>
+          </div>
+
+          {/* Vertical Line */}
+          <div className="w-px h-12 bg-gray-300 relative">
+            <div className={`
+              absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+              w-3 h-3 rounded-full
+              ${donation.status === 'completed' ? 'bg-green-500' : 
+                donation.status === 'deferred' ? 'bg-yellow-500' : 'bg-red-500'}
+            `} />
+          </div>
+
+          {/* Donation Info */}
+          <div className="flex-1">
+            <div className="font-semibold text-gray-800">{donation.hospitalName}</div>
+            <div className="text-sm text-gray-500">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                {donation.bloodType}
+              </span>
+              <span className="mx-2">•</span>
+              <span>{donation.units} unit{donation.units > 1 ? 's' : ''}</span>
+            </div>
+          </div>
+
+          {/* Status Badge */}
+          <div className={`
+            px-3 py-1 rounded-full text-xs font-semibold
+            ${donation.status === 'completed' ? 'bg-green-100 text-green-700' :
+              donation.status === 'deferred' ? 'bg-yellow-100 text-yellow-700' :
+              'bg-red-100 text-red-700'}
+          `}>
+            {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
+          </div>
+
+          {/* Certificate Button */}
+          {donation.certificateId && donation.status === 'completed' && (
+            <button
+              onClick={() => onViewCertificate?.(donation.certificateId!)}
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              title="View Certificate"
+            >
+              📜
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  if (variant === 'list') return content;
+
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
       <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
         📋 Donation History
       </h2>
-
-      <div className="space-y-3">
-        {donations.map((donation, index) => (
-          <div
-            key={donation.id}
-            className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-          >
-            {/* Date Column */}
-            <div className="text-center min-w-[60px]">
-              <div className="text-2xl font-bold text-red-600">
-                {format(new Date(donation.date), 'd')}
-              </div>
-              <div className="text-xs text-gray-500">
-                {format(new Date(donation.date), 'MMM yyyy')}
-              </div>
-            </div>
-
-            {/* Vertical Line */}
-            <div className="w-px h-12 bg-gray-300 relative">
-              <div className={`
-                absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                w-3 h-3 rounded-full
-                ${donation.status === 'completed' ? 'bg-green-500' : 
-                  donation.status === 'deferred' ? 'bg-yellow-500' : 'bg-red-500'}
-              `} />
-            </div>
-
-            {/* Donation Info */}
-            <div className="flex-1">
-              <div className="font-semibold text-gray-800">{donation.hospitalName}</div>
-              <div className="text-sm text-gray-500">
-                <span className="inline-flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                  {donation.bloodType}
-                </span>
-                <span className="mx-2">•</span>
-                <span>{donation.units} unit{donation.units > 1 ? 's' : ''}</span>
-              </div>
-            </div>
-
-            {/* Status Badge */}
-            <div className={`
-              px-3 py-1 rounded-full text-xs font-semibold
-              ${donation.status === 'completed' ? 'bg-green-100 text-green-700' :
-                donation.status === 'deferred' ? 'bg-yellow-100 text-yellow-700' :
-                'bg-red-100 text-red-700'}
-            `}>
-              {donation.status.charAt(0).toUpperCase() + donation.status.slice(1)}
-            </div>
-
-            {/* Certificate Button */}
-            {donation.certificateId && donation.status === 'completed' && (
-              <button
-                onClick={() => onViewCertificate?.(donation.certificateId!)}
-                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                title="View Certificate"
-              >
-                📜
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+      {content}
     </div>
   );
 }

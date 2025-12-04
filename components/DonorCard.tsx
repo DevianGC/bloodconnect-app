@@ -4,7 +4,7 @@ import type { Donor } from '@/types/api';
 type Props = {
   donor: Donor;
   onEdit: (donor: Donor) => void;
-  onDeactivate: (id: number) => void;
+  onDeactivate: (id: string) => void;
   showActions?: boolean;
 };
 
