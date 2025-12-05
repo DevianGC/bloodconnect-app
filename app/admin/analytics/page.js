@@ -2,11 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import AdminTemplate from '@/components/atomic/templates/AdminTemplate';
-import AnalyticsChart from '@/components/AnalyticsChart';
 import StatCard from '@/components/atomic/molecules/StatCard';
 import Button from '@/components/atomic/atoms/Button';
 import { getAnalytics } from '@/lib/api';
+
+const AnalyticsChart = dynamic(() => import('@/components/AnalyticsChart'), {
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-lg"></div>,
+  ssr: false
+});
 
 export default function AdminAnalytics() {
   const router = useRouter();

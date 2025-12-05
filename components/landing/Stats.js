@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export default function Stats() {
+export default function Stats({ data }) {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -24,10 +24,10 @@ export default function Stats() {
   }, []);
 
   const stats = [
-    { value: '500+', label: 'Registered Donors' },
-    { value: '150+', label: 'Lives Saved' },
-    { value: '4', label: 'Partner Hospitals' },
-    { value: '24/7', label: 'Emergency Response' }
+    { value: data?.donors || '500+', label: 'Registered Donors' },
+    { value: data?.livesSaved || '150+', label: 'Lives Saved' },
+    { value: data?.hospitals || '4', label: 'Partner Hospitals' },
+    { value: data?.emergency || '24/7', label: 'Emergency Response' }
   ];
 
   return (
