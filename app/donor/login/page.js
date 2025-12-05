@@ -13,7 +13,7 @@ export default function DonorLogin() {
     email: '',
     password: '',
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,7 +104,7 @@ export default function DonorLogin() {
           <Link href="/donor/register" className={styles.authLink}>
             Register as a donor →
           </Link>
-          <div style={{ marginTop: '1.5rem' }}>
+          <div style={{ marginTop: '1rem' }}>
             <Link href="/" className={styles.authLink}>
               ← Back to Home
             </Link>
