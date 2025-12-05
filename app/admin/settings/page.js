@@ -59,7 +59,7 @@ export default function AdminSettings() {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-800 mb-6">Account Settings</h2>
           <div className="space-y-6 divide-y divide-gray-100">
-            <div className="flex items-center justify-between pt-4 first:pt-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 first:pt-0">
               <div>
                 <h4 className="text-base font-medium text-gray-900">Change Password</h4>
                 <p className="text-sm text-gray-500 mt-1">Update your password to keep your account secure</p>
@@ -72,7 +72,7 @@ export default function AdminSettings() {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6">
               <div>
                 <h4 className="text-base font-medium text-gray-900">Email Notifications</h4>
                 <p className="text-sm text-gray-500 mt-1">Receive notifications about new blood requests and system updates</p>
@@ -83,7 +83,7 @@ export default function AdminSettings() {
               </label>
             </div>
 
-            <div className="flex items-center justify-between pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6">
               <div>
                 <h4 className="text-base font-medium text-gray-900">Two-Factor Authentication</h4>
                 <p className="text-sm text-gray-500 mt-1">Add an extra layer of security to your account</p>

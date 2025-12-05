@@ -14,7 +14,67 @@ const DonorList: React.FC<DonorListProps> = ({
   onDeactivate
 }) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full">
+      {/* Mobile View - Cards */}
+      <div className="md:hidden space-y-4">
+        {donors.map((donor) => (
+          <div key={donor.id} className="bg-white p-4 rounded-lg shadow border border-gray-200">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <h3 className="font-medium text-gray-900">{donor.name}</h3>
+                <p className="text-sm text-gray-500">{donor.email}</p>
+              </div>
+              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                donor.status === 'active' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {donor.status}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Blood Type</p>
+                <p className="font-bold text-red-600">{donor.bloodType}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Contact</p>
+                <p className="text-gray-900 text-sm">{donor.contact}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-xs text-gray-500 uppercase">Location</p>
+                <p className="text-gray-900 text-sm">{donor.barangay}, {donor.address}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase">Last Donation</p>
+                <p className="text-gray-900 text-sm">{donor.lastDonation || 'Never'}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-3 border-t border-gray-100">
+              <Button onClick={() => onEdit(donor)} variant="secondary" className="text-xs px-3 py-1.5 flex-1 justify-center">
+                Edit
+              </Button>
+              <Button
+                onClick={() => onDeactivate(donor.id)}
+                variant="danger"
+                className="text-xs px-3 py-1.5 flex-1 justify-center"
+              >
+                {donor.status === 'active' ? 'Deactivate' : 'Activate'}
+              </Button>
+            </div>
+          </div>
+        ))}
+        {donors.length === 0 && (
+          <div className="text-center py-8 bg-white rounded-lg border border-gray-200">
+            <p className="text-gray-500">No donors found.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop View - Table */}
+      <div className="hidden md:block overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -69,6 +129,7 @@ const DonorList: React.FC<DonorListProps> = ({
           <p className="text-gray-500 text-lg">No donors found.</p>
         </div>
       )}
+      </div>
     </div>
   );
 };

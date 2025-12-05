@@ -313,7 +313,7 @@ export default function RequestsManagement() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="md:bg-white md:rounded-xl md:shadow-sm md:border md:border-gray-200 md:overflow-hidden">
           <RequestList
             requests={filteredRequests}
             onView={handleViewRequest}
