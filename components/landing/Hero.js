@@ -26,7 +26,8 @@ export default function Hero() {
           className="absolute inset-0 bg-[url('/BCOimage1.jpg')] bg-cover bg-center"
           style={{ transform: `scale(${1 + scrollY * 0.0003})` }}
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
       </div>
       
       {/* Content */}
@@ -77,7 +78,7 @@ export default function Hero() {
         <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-16 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <Link 
             href="/donor/register" 
-            className="px-8 py-4 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 hover:scale-105 transition-all duration-300 shadow-lg shadow-red-600/30"
+            className="px-8 py-4 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 hover:text-white hover:scale-105 transition-all duration-300 shadow-lg shadow-red-600/30"
           >
             Become a Donor
           </Link>

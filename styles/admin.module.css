@@ -212,6 +212,36 @@
   box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
 }
 
+/* Form Fields */
+.formField {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.formField:hover {
+  border-color: #cbd5e1;
+  background: white;
+}
+
+.formField:focus {
+  outline: none;
+  border-color: #dc2626;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+.formField:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
 /* Table Styles */
 .tableSection {
   background: white;

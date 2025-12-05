@@ -59,6 +59,9 @@ const useAuthRequest = () => {
             role: 'admin'
           };
           
+          // Set cookie for middleware
+          document.cookie = "user_role=admin; path=/; max-age=86400; SameSite=Strict";
+
           setIsLoading(false);
           return { success: true, user: userData };
 
@@ -92,6 +95,9 @@ const useAuthRequest = () => {
       
       // Store user info in localStorage for persistence
       localStorage.setItem('donorUser', JSON.stringify(userData));
+
+      // Set cookie for middleware
+      document.cookie = "user_role=donor; path=/; max-age=86400; SameSite=Strict";
 
       setIsLoading(false);
       return { success: true, user: userData };

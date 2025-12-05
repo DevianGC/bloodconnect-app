@@ -52,6 +52,8 @@ export default function Navbar({ role = 'public' }) {
     localStorage.removeItem('donorUser');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('adminUser');
+    // Clear cookie
+    document.cookie = "user_role=; path=/; max-age=0";
     router.push('/');
   };
 
@@ -75,7 +77,7 @@ export default function Navbar({ role = 'public' }) {
               </svg>
             </div>
             <span className={`text-lg font-bold transition-colors duration-300 ${
-              isScrolled || !isLandingPage ? 'text-gray-900' : 'text-white'
+              isScrolled || !isLandingPage ? 'text-gray-900' : 'text-white drop-shadow-md'
             }`}>BloodConnect</span>
           </Link>
 
@@ -90,7 +92,7 @@ export default function Navbar({ role = 'public' }) {
                     ? 'bg-red-600 text-white' 
                     : isScrolled || !isLandingPage
                       ? 'text-gray-700 hover:text-red-600'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      : 'text-white hover:text-white hover:bg-white/10 drop-shadow-md'
                 }`}
               >
                 {label}

@@ -30,7 +30,7 @@ export default function Sidebar({ role = 'admin' }) {
   return (
     <aside 
       className={`
-        bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 h-[calc(100vh-5rem)] sticky top-20 transition-all duration-300 ease-in-out overflow-hidden shadow-sm
+        hidden md:block bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 h-[calc(100vh-5rem)] sticky top-20 transition-all duration-300 ease-in-out overflow-hidden shadow-sm
         ${isCollapsed ? 'w-16' : 'w-64'}
       `}
     >

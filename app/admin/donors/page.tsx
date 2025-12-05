@@ -79,9 +79,9 @@ export default function AdminDonors() {
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(d =>
-        d.name.toLowerCase().includes(searchLower) ||
-        d.email.toLowerCase().includes(searchLower) ||
-        d.contact.includes(searchLower)
+        d.name?.toLowerCase().includes(searchLower) ||
+        d.email?.toLowerCase().includes(searchLower) ||
+        d.contact?.includes(searchLower)
       );
     }
 

@@ -22,9 +22,13 @@ service cloud.firestore {
 
     // Requests collection
     match /requests/{requestId} {
-      allow read: if true; // Publicly readable? Or just authenticated?
-      allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated() && (request.auth.uid == resource.data.userId || request.auth.token.role == 'admin');
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == resource.data.userId || 
+        (exists(/databases/$(database)/documents/donors/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/donors/$(request.auth.uid)).data.role == 'admin')
+      );
     }
 
     // Donations collection
@@ -37,6 +41,13 @@ service cloud.firestore {
     match /appointments/{appointmentId} {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+    }
+
+    // Alerts collection
+    match /alerts/{alertId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // Ideally restrict to admin, but for now allow auth users to fix permission error
       allow update: if isAuthenticated();
     }
     

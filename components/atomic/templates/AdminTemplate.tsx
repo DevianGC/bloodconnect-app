@@ -14,10 +14,10 @@ const AdminTemplate: React.FC<AdminTemplateProps> = ({ children, title }) => {
       <Navbar role="admin" />
       <div className="flex flex-1 pt-20">
         <Sidebar role="admin" />
-        <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-5rem)]">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto h-[calc(100vh-5rem)]">
           <div className="max-w-7xl mx-auto">
-            <header className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+            <header className="mb-6 md:mb-8">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{title}</h1>
             </header>
             {children}
           </div>

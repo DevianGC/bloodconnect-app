@@ -7,13 +7,15 @@ interface RequestListProps {
   onView: (request: BloodRequest) => void;
   onUpdateStatus: (id: string, status: string) => void;
   onDelete: (id: string) => void;
+  onNotify?: (request: BloodRequest) => void;
 }
 
 const RequestList: React.FC<RequestListProps> = ({
   requests,
   onView,
   onUpdateStatus,
-  onDelete
+  onDelete,
+  onNotify
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -65,34 +67,53 @@ const RequestList: React.FC<RequestListProps> = ({
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(request.createdAt).toLocaleDateString()}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                <Button onClick={() => onView(request)} variant="secondary" className="text-xs px-2 py-1">
-                  View
-                </Button>
-                {request.status === 'active' && (
-                  <>
-                    <Button
-                      onClick={() => onUpdateStatus(request.id, 'fulfilled')}
-                      variant="primary"
-                      className="text-xs px-2 py-1"
-                    >
-                      Fulfill
-                    </Button>
-                    <Button
-                      onClick={() => onUpdateStatus(request.id, 'cancelled')}
-                      variant="danger"
-                      className="text-xs px-2 py-1"
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
-                <Button
-                  onClick={() => onDelete(request.id)}
-                  variant="danger"
-                  className="text-xs px-2 py-1"
-                >
-                  Delete
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button onClick={() => onView(request)} variant="secondary" className="text-xs px-2 py-1">
+                    View
+                  </Button>
+                  {request.status === 'active' && (
+                    <>
+                      {onNotify && (
+                        <button
+                          onClick={() => onNotify(request)}
+                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-1.5 rounded transition-colors"
+                          title="Notify Donors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                          </svg>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => onUpdateStatus(request.id, 'fulfilled')}
+                        className="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 p-1.5 rounded transition-colors"
+                        title="Mark as Fulfilled"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => onUpdateStatus(request.id, 'cancelled')}
+                        className="text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 p-1.5 rounded transition-colors"
+                        title="Cancel Request"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => onDelete(request.id)}
+                    className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-1.5 rounded transition-colors"
+                    title="Delete Request"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
