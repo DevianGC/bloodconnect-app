@@ -1,17 +1,67 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import { checkDonationEligibility } from '@/lib/api';
 import { getDonorById } from '@/lib/db';
 import { getDonorStats, getLeaderboard } from '@/lib/gamification';
 import { getDonationHistory, getCertificate } from '@/lib/donationHistory';
-import DonationScheduler from '@/components/DonationScheduler';
-import BloodCompatibilityChart from '@/components/BloodCompatibilityChart';
+
+// Lazy load heavy components for better performance
+const DonationScheduler = dynamic(() => import('@/components/DonationScheduler'), {
+  loading: () => <ComponentSkeleton height="400px" />,
+  ssr: false
+});
+
+const BloodCompatibilityChart = dynamic(() => import('@/components/BloodCompatibilityChart'), {
+  loading: () => <ComponentSkeleton height="300px" />,
+  ssr: false
+});
+
+const GamificationComponents = dynamic(
+  () => import('@/components/Gamification').then(mod => ({
+    default: ({ donorStats, leaderboard }) => (
+      <>
+        <mod.DonorStatsCard stats={donorStats} />
+        <mod.Leaderboard data={leaderboard} />
+        <mod.BadgeDisplay badges={donorStats?.badges || []} />
+      </>
+    )
+  })),
+  { loading: () => <ComponentSkeleton height="200px" />, ssr: false }
+);
+
+const DonationHistoryComponents = dynamic(
+  () => import('@/components/DonationHistory').then(mod => ({
+    default: ({ donations, onViewCertificate }) => (
+      <mod.DonationHistory donations={donations} onViewCertificate={onViewCertificate} />
+    )
+  })),
+  { loading: () => <ComponentSkeleton height="300px" />, ssr: false }
+);
+
+// Re-export needed components for inline use
 import { DonorStatsCard, Leaderboard, BadgeDisplay } from '@/components/Gamification';
 import { DonationHistory, CertificateModal, DonationStatsCard } from '@/components/DonationHistory';
+
+// Loading skeleton component
+function ComponentSkeleton({ height = '200px' }) {
+  return (
+    <div 
+      className="animate-pulse bg-gray-100 rounded-xl"
+      style={{ height }}
+    >
+      <div className="p-6 space-y-4">
+        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+      </div>
+    </div>
+  );
+}
 
 // Simple SVG Icons
 const Icons = {
